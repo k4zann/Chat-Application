@@ -13,7 +13,6 @@ dependencies:
   equatable: ^2.0.5
   uuid: ^4.3.3
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
