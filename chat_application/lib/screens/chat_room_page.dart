@@ -4,6 +4,7 @@ import 'package:models/models.dart';
 import 'package:models/src/chat_room.dart';
 
 import '../widget/avatar.dart';
+import '../widget/messageBubble.dart';
 
 class ChatRoomPage extends StatefulWidget {
   const ChatRoomPage({Key? key, required this.chatRoom}) : super(key: key);
@@ -57,11 +58,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         title: Column(
           children: [
             Avatar(
-              imageUrl: otherUser.avatarUrl,
+              imageUrl: currentUser.avatarUrl,
               radius: 18.0,
             ),
             Text(
-              otherUser.username,
+              currentUser.username,
               style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -92,7 +93,34 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                 child: ListView.builder(
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    return Text(messages[index].content ?? '');
+                    final message = messages[index];
+                    final showImage = index + 1 == messages.length ||
+                    messages[index + 1].senderUserId != message.senderUserId;
+
+
+
+                    return Row(
+                      mainAxisAlignment: message.senderUserId == userId1
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+
+                      children: [
+                        if (showImage && message.senderUserId != userId1)
+                          Avatar(
+                            imageUrl: otherUser.avatarUrl,
+                            radius: 12.0,
+                          ),
+
+                        MessageBubble(
+                          message: message
+                        ),
+                        if (showImage && message.senderUserId == userId1)
+                          Avatar(
+                            imageUrl: currentUser.avatarUrl,
+                            radius: 12.0,
+                          ),
+                      ]
+                    );
                   }
                 )
               ),
@@ -115,26 +143,26 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           borderRadius: BorderRadius.circular(16.0),
                           borderSide: BorderSide.none,
                         ),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              messages.add(
+                                  Message(
+                                    id: 'de120f3a-dbca-4330-9e2e-18b55a2fb9e5',
+                                    chatRoomId: '8d162274-6cb8-4776-815a-8e721ebfb76d',
+                                    senderUserId: userId1,
+                                    receiverUserId: userId2,
+                                    content: _messageController.text,
+                                    createdAt: DateTime.now(),
+                                  )
+                              );
+                              _messageController.clear();
+                            });
+                          },
+                          icon: const Icon(Icons.send),
+                        ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        messages.add(
-                            Message(
-                              id: 'de120f3a-dbca-4330-9e2e-18b55a2fb9e5',
-                              chatRoomId: '8d162274-6cb8-4776-815a-8e721ebfb76d',
-                              senderUserId: userId1,
-                              receiverUserId: userId2,
-                              content: _messageController.text,
-                              createdAt: DateTime.now(),
-                            )
-                        );
-                        _messageController.clear();
-                      });
-                    },
-                    icon: const Icon(Icons.send),
                   ),
                 ]
               )
