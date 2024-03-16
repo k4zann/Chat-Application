@@ -9,11 +9,8 @@ class MessageRepository {
 
   Future<Map<String, dynamic>> createMsg(Map<String, dynamic> data) async {
     try {
-      return await supabaseClient
-          .from('messages')
-          .insert(data)
-          .single();
-    } catch(err) {
+      return await supabaseClient.from('messages').insert(data).select().single();
+    } catch (err) {
       throw Exception(err);
     }
   }

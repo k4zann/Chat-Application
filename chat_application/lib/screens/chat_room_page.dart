@@ -23,6 +23,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   void initState() {
     _loadMessages();
     _startWebSocket();
+
     msgRepo.subscribeToMessageUpdates((messageData) {
       final message = Message.fromJson(messageData);
       if (message.chatRoomId == widget.chatRoom.id) {
@@ -76,6 +77,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       },
     );
   }
+
+
   @override
   Widget build(BuildContext context) {
     final viewInsets = MediaQuery.viewInsetsOf(context);

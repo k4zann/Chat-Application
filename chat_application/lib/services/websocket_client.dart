@@ -32,9 +32,11 @@ class WebSocketClient {
     channel!.stream.listen(
           (event) {
         Map<String, dynamic> message = jsonDecode(event);
+
         if (message['event'] == 'message.created') {
           messageController.add(message['data']);
         }
+        // Add more if .. else if .. else statements for other events.
       },
       onDone: () {
         debugPrint('Connection closed');
