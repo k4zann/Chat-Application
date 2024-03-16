@@ -36,7 +36,6 @@ class WebSocketClient {
         if (message['event'] == 'message.created') {
           messageController.add(message['data']);
         }
-        // Add more if .. else if .. else statements for other events.
       },
       onDone: () {
         debugPrint('Connection closed');

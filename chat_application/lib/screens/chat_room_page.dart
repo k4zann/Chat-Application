@@ -50,11 +50,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       content: _messageController.text,
       createdAt: DateTime.now(),
     );
-
-    // setState(() {
-    //   messages.add(message);
-    // });
-
     await msgRepo.createMessage(message);
     _messageController.clear();
   }

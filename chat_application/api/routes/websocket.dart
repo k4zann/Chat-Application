@@ -14,31 +14,30 @@ Future<Response> onRequest(RequestContext context) async {
         return;
       }
 
-      final messageJson = jsonDecode(message);
-      print('Received messageJson: $messageJson');
+      Map<String, dynamic> messageJson = jsonDecode(message) as Map<String, dynamic>;
 
       final event = messageJson['event'];
       final data = messageJson['data'];
       print('event: $event, data: $data');
 
-      if (data != null && data is Map<String, dynamic>) {
-        switch (event) {
-          case 'message.create':
-            messageRepository.createMsg(data).then((message) {
+      switch (event) {
+        case 'message.create':
+          messageRepository.createMsg(data as Map<String, dynamic>).then(
+                (message) {
+              // TODO: Choose who should receive the message.
               channel.sink.add(
                 jsonEncode({
-                  'event': event,
+                  'event': 'message.created',
                   'data': message,
                 }),
               );
-            }).catchError((err) {
-              print('Something went wrong while creating message: $err');
-            });
-            break;
-          default:
-        }
-      } else {
-        print('Data is null or not of type Map<String, dynamic>: $data');
+            },
+          ).catchError((err) {
+            print('Something went wrong');
+          });
+
+          break;
+        default:
       }
     });
   });
