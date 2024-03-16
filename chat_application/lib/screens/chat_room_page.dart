@@ -16,24 +16,24 @@ class ChatRoomPage extends StatefulWidget {
 }
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
-  final List<Message> messages = [
-    Message(
-      id: 'de120f3a-dbca-4330-9e2e-18b55a2fb9e5',
-      chatRoomId: '8d162274-6cb8-4776-815a-8e721ebfb76d',
-      senderUserId: userId1,
-      receiverUserId: userId2,
-      content: 'Hey! I am good, thanks.',
-      createdAt: DateTime(2023, 12, 1, 1, 0, 0),
-    ),
-    Message(
-      id: 'de120f3a-dbca-4330-9e2e-18b55a2fb9e5',
-      chatRoomId: '8d162274-6cb8-4776-815a-8e721ebfb76d',
-      senderUserId: userId2,
-      receiverUserId: userId1,
-      content: 'Hey! I am good, thanks.',
-      createdAt: DateTime(2023, 12, 1, 1, 0, 0),
-    ),
-  ];
+  final TextEditingController _messageController = TextEditingController();
+  final List<Message> messages = [];
+
+  @override
+  void initState() {
+    _loadMessages();
+
+    // msgRepo.subscribeToMessageUpdates((messageData) {
+    //   final message = Message.fromJson(messageData);
+    //   if (message.chatRoomId == widget.chatRoom.id) {
+    //     messages.add(message);
+    //     messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    //     setState(() {});
+    //   }
+    // });
+    super.initState();
+  }
+
 
   @override
   void dispose() {
@@ -41,7 +41,30 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     super.dispose();
   }
 
-  final TextEditingController _messageController = TextEditingController();
+  void _sendMessage() async {
+    final message = Message(
+      chatRoomId: widget.chatRoom.id,
+      senderUserId: userId1,
+      receiverUserId: userId2,
+      content: _messageController.text,
+      createdAt: DateTime.now(),
+    );
+
+    await msgRepo.createMessage(message);
+    _messageController.clear();
+  }
+
+  _loadMessages() async {
+    final _messages = await msgRepo.fetchMessages(widget.chatRoom.id);
+
+    _messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    setState(() {
+      messages.addAll(_messages);
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final viewInsets = MediaQuery.viewInsetsOf(context);
@@ -144,17 +167,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
-                              messages.add(
-                                  Message(
-                                    id: 'de120f3a-dbca-4330-9e2e-18b55a2fb9e5',
-                                    chatRoomId: '8d162274-6cb8-4776-815a-8e721ebfb76d',
-                                    senderUserId: userId1,
-                                    receiverUserId: userId2,
-                                    content: _messageController.text,
-                                    createdAt: DateTime.now(),
-                                  )
-                              );
-                              _messageController.clear();
+                              _sendMessage();
                             });
                           },
                           icon: const Icon(Icons.send),

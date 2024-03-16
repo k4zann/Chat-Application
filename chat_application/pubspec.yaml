@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   envied: ^0.5.3
   http: ^1.2.1
+  web_socket_channel: ^2.4.4
   
 
 dev_dependencies:

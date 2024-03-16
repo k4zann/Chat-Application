@@ -11,7 +11,7 @@ class ChatApi {
     required TokenProvider tokenProvider,
     http.Client? httpClient,
   }) : this._(
-    baseUrl: 'http://localhost:8080',
+    baseUrl: 'http://192.168.0.14:8080',
     tokenProvider: tokenProvider,
     httpClient: httpClient,
   );

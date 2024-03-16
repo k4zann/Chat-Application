@@ -10,7 +10,7 @@ final ChatApi chatApi = ChatApi(
   },
 );
 
-final MsgRepo msgRepo = MsgRepo(chatApi: chatApi);
+final MsgRepo msgRepo = MsgRepo(apiClient: chatApi);
 
 void main() {
   runApp(const MyApp());
@@ -34,8 +34,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const userId1 = '33f771e2-311b-4d4f-9b14-d1e1c59936d3';
-const userId2 = '94a6b01e-319e-494e-b454-98f22ab0d109';
+const userId1 = 'ff31f4a3-5d9f-4fea-8e22-dd2273415109';
+const userId2 = 'dcd9865b-379e-4049-a25e-6ec41ec820e5';
 
 final chatRoom = ChatRoom(
   id: '8d162274-6cb8-4776-815a-8e721ebfb76d',
