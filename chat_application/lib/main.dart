@@ -1,6 +1,16 @@
+import 'package:chat_application/repositories/msg_repo.dart';
 import 'package:chat_application/screens/chat_room_page.dart';
+import 'package:chat_application/services/chat_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
+
+final ChatApi chatApi = ChatApi(
+  tokenProvider: () async {
+    return 'token';
+  },
+);
+
+final MsgRepo msgRepo = MsgRepo(chatApi: chatApi);
 
 void main() {
   runApp(const MyApp());

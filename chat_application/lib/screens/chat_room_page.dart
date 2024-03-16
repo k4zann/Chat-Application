@@ -97,8 +97,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                     final showImage = index + 1 == messages.length ||
                     messages[index + 1].senderUserId != message.senderUserId;
 
-
-
                     return Row(
                       mainAxisAlignment: message.senderUserId == userId1
                           ? MainAxisAlignment.end
