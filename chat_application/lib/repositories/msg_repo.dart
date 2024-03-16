@@ -1,23 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:models/models.dart';
 
 import '../services/chat_api_client.dart';
+import '../services/websocket_client.dart';
 
 class MsgRepo {
   final ChatApi apiClient;
-  // final WebSocketClient webSocketClient;
+  final WebSocketClient webSocketClient;
   StreamSubscription? _messageSubscription;
 
   MsgRepo({
     required this.apiClient,
-    // required this.webSocketClient,
+    required this.webSocketClient,
   });
 
   Future<void> createMessage(Message message) async {
-    // final payload = "{'message.create': ${message.toJson()}";
-    // webSocketClient.send(payload);
-    var payload = {'event': 'message.create', 'data': message.toJson()};
+    final payload = "{'message.create': ${message.toJson()}";
+    webSocketClient.send(payload);
+    // var payload = {'event': 'message.create', 'data': message.toJson()};
     // webSocketClient.send(jsonEncode(payload));
   }
 
@@ -30,16 +32,16 @@ class MsgRepo {
     return messages;
   }
 
-  // // TODO: Subscribe only to the current chat room.
-  // void subscribeToMessageUpdates(
-  //     void Function(Map<String, dynamic>) onMessageReceived,
-  //     ) {
-  //   _messageSubscription = webSocketClient.messageUpdates().listen(
-  //         (message) {
-  //       onMessageReceived(message);
-  //     },
-  //   );
-  // }
+  // TODO: Subscribe only to the current chat room.
+  void subscribeToMessageUpdates(
+      void Function(Map<String, dynamic>) onMessageReceived,
+      ) {
+    _messageSubscription = webSocketClient.messageUpdates().listen(
+          (message) {
+        onMessageReceived(message);
+      },
+    );
+  }
 
   void unsubscribeFromMessageUpdates() {
     _messageSubscription?.cancel();

@@ -5,9 +5,9 @@ import '../main.dart';
 
 Handler middleware(Handler handler) {
   return handler.use(
-    requestLogger()
+    requestLogger(),
   ).use(provider<MessageRepository>((_)
-    => messageRepository
-    )
+    => messageRepository,
+    ),
   );
 }

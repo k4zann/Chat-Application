@@ -22,15 +22,15 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   @override
   void initState() {
     _loadMessages();
-
-    // msgRepo.subscribeToMessageUpdates((messageData) {
-    //   final message = Message.fromJson(messageData);
-    //   if (message.chatRoomId == widget.chatRoom.id) {
-    //     messages.add(message);
-    //     messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-    //     setState(() {});
-    //   }
-    // });
+    _startWebSocket();
+    msgRepo.subscribeToMessageUpdates((messageData) {
+      final message = Message.fromJson(messageData);
+      if (message.chatRoomId == widget.chatRoom.id) {
+        messages.add(message);
+        messages.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        setState(() {});
+      }
+    });
     super.initState();
   }
 
@@ -50,6 +50,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       createdAt: DateTime.now(),
     );
 
+    setState(() {
+      messages.add(message);
+    });
+
     await msgRepo.createMessage(message);
     _messageController.clear();
   }
@@ -64,7 +68,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     });
   }
 
-
+  _startWebSocket() {
+    webSocketClient.connect(
+      'ws://192.168.0.14:8080/websocket',
+      {
+        'Authorization': 'Bearer ....',
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     final viewInsets = MediaQuery.viewInsetsOf(context);
@@ -166,9 +177,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                         ),
                         suffixIcon: IconButton(
                           onPressed: () {
-                            setState(() {
-                              _sendMessage();
-                            });
+                            _sendMessage();
                           },
                           icon: const Icon(Icons.send),
                         ),

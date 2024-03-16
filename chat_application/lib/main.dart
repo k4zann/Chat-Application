@@ -1,6 +1,7 @@
 import 'package:chat_application/repositories/msg_repo.dart';
 import 'package:chat_application/screens/chat_room_page.dart';
 import 'package:chat_application/services/chat_api_client.dart';
+import 'package:chat_application/services/websocket_client.dart';
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
 
@@ -10,7 +11,12 @@ final ChatApi chatApi = ChatApi(
   },
 );
 
-final MsgRepo msgRepo = MsgRepo(apiClient: chatApi);
+final MsgRepo msgRepo = MsgRepo(
+    apiClient: chatApi,
+    webSocketClient: webSocketClient
+);
+final webSocketClient = WebSocketClient();
+
 
 void main() {
   runApp(const MyApp());
