@@ -17,10 +17,10 @@ class MsgRepo {
   });
 
   Future<void> createMessage(Message message) async {
-    final payload = "{'message.create': ${message.toJson()}";
-    webSocketClient.send(payload);
-    // var payload = {'event': 'message.create', 'data': message.toJson()};
-    // webSocketClient.send(jsonEncode(payload));
+    // final payload = "{'message.create': ${message.toJson()}";
+    // webSocketClient.send(payload);
+    var payload = {'event': 'message.create', 'data': message.toJson()};
+    webSocketClient.send(jsonEncode(payload));
   }
 
   Future<List<Message>> fetchMessages(String chatRoomId) async {
@@ -32,7 +32,6 @@ class MsgRepo {
     return messages;
   }
 
-  // TODO: Subscribe only to the current chat room.
   void subscribeToMessageUpdates(
       void Function(Map<String, dynamic>) onMessageReceived,
       ) {
@@ -42,6 +41,7 @@ class MsgRepo {
       },
     );
   }
+
 
   void unsubscribeFromMessageUpdates() {
     _messageSubscription?.cancel();

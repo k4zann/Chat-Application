@@ -6,8 +6,16 @@ class MessageRepository {
   const MessageRepository({
     required this.supabaseClient
   });
-  createMsg() {
 
+  Future<Map<String, dynamic>> createMsg(Map<String, dynamic> data) async {
+    try {
+      return await supabaseClient
+          .from('messages')
+          .insert(data)
+          .single();
+    } catch(err) {
+      throw Exception(err);
+    }
   }
 
   Future<List<Map<String, dynamic>>> fetchMessages(String chatRoomId) async {

@@ -32,7 +32,6 @@ class WebSocketClient {
     channel!.stream.listen(
           (event) {
         Map<String, dynamic> message = jsonDecode(event);
-
         if (message['event'] == 'message.created') {
           messageController.add(message['data']);
         }
